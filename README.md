@@ -2,7 +2,24 @@
 
 Reclaim RAM by intelligently suspending inactive tabs. Per-domain rules, regex whitelists, battery-aware scheduling, smart usage learning, and a calm suspended page. Manifest V3, local-only, no telemetry.
 
+
+<img width="392" height="641" alt="Capture d&#39;écran 2026-05-06 002354" src="https://github.com/user-attachments/assets/b83f8187-b27a-45d8-8339-a0e3269a579f" />
+
+<img width="1217" height="679" alt="Capture d&#39;écran 2026-05-06 002603" src="https://github.com/user-attachments/assets/6ffcac58-b417-47ff-9776-c98e1ba59644" />
+
+<img width="1231" height="894" alt="Capture d&#39;écran 2026-05-06 002443" src="https://github.com/user-attachments/assets/ee9a49c6-0300-4a06-ac6c-5c23f42552af" />
+
+<img width="1141" height="870" alt="Capture d&#39;écran 2026-05-06 002502" src="https://github.com/user-attachments/assets/e10e7ba5-fb3c-4420-97c4-6462e2452aae" />
+
+<img width="1245" height="895" alt="Capture d&#39;écran 2026-05-06 002509" src="https://github.com/user-attachments/assets/636dcc14-bf8d-4f2b-83c8-a49e189e53ee" />
+
+<img width="1177" height="870" alt="Capture d&#39;écran 2026-05-06 002453" src="https://github.com/user-attachments/assets/5d5d4279-6953-4c6c-85e5-e51a88758a27" />
+
+
 ---
+
+## Install From the WebStore
+*publishing in progress*
 
 ## Install (developer mode)
 
