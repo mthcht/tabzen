@@ -1,0 +1,613 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TabZen · Settings</title>
+  <link rel="stylesheet" href="options.css" />
+</head>
+<body>
+  <div class="layout">
+    <aside class="nav">
+      <div class="brand">
+        <span class="dot"></span>
+        <div>
+          <div class="brand-name">TabZen</div>
+          <div class="brand-tag">tab suspender</div>
+        </div>
+      </div>
+
+      <nav class="nav-list">
+        <a href="#general" class="nav-item active">General</a>
+        <a href="#never" class="nav-item">Never suspend</a>
+        <a href="#filters" class="nav-item">Whitelist &amp; blacklist</a>
+        <a href="#perdomain" class="nav-item">Per-domain rules</a>
+        <a href="#schedule" class="nav-item">Schedule</a>
+        <a href="#power" class="nav-item">Power &amp; memory</a>
+        <a href="#smart" class="nav-item">Smart suspension</a>
+        <a href="#appearance" class="nav-item">Suspended page</a>
+        <a href="#sessions" class="nav-item">Sessions</a>
+        <a href="#stats" class="nav-item">Stats</a>
+        <a href="#shortcuts" class="nav-item">Shortcuts</a>
+        <a href="#data" class="nav-item">Backup &amp; data</a>
+      </nav>
+
+      <div class="nav-footer">
+        <div class="kbd-line">Press <span class="kbd">⌘K</span> to toggle</div>
+      </div>
+    </aside>
+
+    <main class="content">
+      <div id="welcome" class="welcome" hidden>
+        <h2>Welcome to TabZen</h2>
+        <p>You're all set with sensible defaults — tabs will auto-suspend after 30 minutes of inactivity. Browse through the sections to fine-tune. Everything is stored locally; nothing is sent anywhere.</p>
+      </div>
+
+      <!-- GENERAL -->
+      <section class="panel" id="general-panel">
+        <header class="panel-hd">
+          <h1>General</h1>
+          <p>Master controls and the default idle timer.</p>
+        </header>
+
+        <div class="card">
+          <div class="row">
+            <div class="row-meta">
+              <div class="row-title">Enable TabZen</div>
+              <div class="row-sub">Pause all automatic suspension without losing your settings.</div>
+            </div>
+            <label class="switch"><input type="checkbox" id="opt-enabled" /><span></span></label>
+          </div>
+
+          <hr />
+
+          <div class="row">
+            <div class="row-meta">
+              <div class="row-title">Suspend tabs after</div>
+              <div class="row-sub">How long a tab must be inactive before being suspended.</div>
+            </div>
+            <div class="num-with-unit">
+              <input type="number" id="opt-minutes" min="1" max="1440" />
+              <span class="unit">minutes</span>
+            </div>
+          </div>
+
+          <hr />
+
+          <div class="row">
+            <div class="row-meta">
+              <div class="row-title">Suspension strategy</div>
+              <div class="row-sub">
+                <b>Replace</b> swaps the page for a calm placeholder (frees the most RAM).
+                <b>Discard</b> uses Chrome's native discard API (lighter; tab reloads when revisited).
+              </div>
+            </div>
+            <select id="opt-strategy">
+              <option value="replace">Replace page (recommended)</option>
+              <option value="discard">Native discard</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- NEVER SUSPEND -->
+      <section class="panel" id="never-panel">
+        <header class="panel-hd">
+          <h1>Never suspend when…</h1>
+          <p>Conditions that prevent suspension. All checked conditions apply.</p>
+        </header>
+
+        <div class="card grid-toggles">
+          <label class="toggle-card">
+            <input type="checkbox" id="ns-pinned" />
+            <div>
+              <div class="tt">Tab is pinned</div>
+              <div class="ts">Pinned tabs are usually persistent essentials.</div>
+            </div>
+          </label>
+
+          <label class="toggle-card">
+            <input type="checkbox" id="ns-audible" />
+            <div>
+              <div class="tt">Audio is playing</div>
+              <div class="ts">Music, video, and calls won't be cut off.</div>
+            </div>
+          </label>
+
+          <label class="toggle-card">
+            <input type="checkbox" id="ns-form" />
+            <div>
+              <div class="tt">There's unsaved form input</div>
+              <div class="ts">Detected via a tiny content script.</div>
+            </div>
+          </label>
+
+          <label class="toggle-card">
+            <input type="checkbox" id="ns-offline" />
+            <div>
+              <div class="tt">You're offline</div>
+              <div class="ts">Avoids losing data you can't reload.</div>
+            </div>
+          </label>
+
+          <label class="toggle-card">
+            <input type="checkbox" id="ns-active" />
+            <div>
+              <div class="tt">Tab is active in any window</div>
+              <div class="ts">The visible tab in any window is left alone.</div>
+            </div>
+          </label>
+
+          <label class="toggle-card">
+            <input type="checkbox" id="ns-only" />
+            <div>
+              <div class="tt">It's the only tab in its window</div>
+              <div class="ts">Avoid leaving an empty window behind.</div>
+            </div>
+          </label>
+
+          <label class="toggle-card">
+            <input type="checkbox" id="ns-power" />
+            <div>
+              <div class="tt">Plugged into power</div>
+              <div class="ts">Skip suspension when battery isn't a concern.</div>
+            </div>
+          </label>
+
+          <label class="toggle-card">
+            <input type="checkbox" id="ns-group" />
+            <div>
+              <div class="tt">Tab is in a tab group</div>
+              <div class="ts">Preserve curated workspace groups.</div>
+            </div>
+          </label>
+        </div>
+      </section>
+
+      <!-- FILTERS -->
+      <section class="panel" id="filters-panel">
+        <header class="panel-hd">
+          <h1>Whitelist &amp; blacklist</h1>
+          <p>Match URLs by domain, glob, contains, exact, or regex. Whitelist entries are never suspended; blacklist entries are forced (overrides "never suspend" rules).</p>
+        </header>
+
+        <div class="card">
+          <div class="rules-hd">
+            <h2>Whitelist</h2>
+            <button class="btn ghost-btn" id="add-whitelist">+ Add entry</button>
+          </div>
+          <div class="rule-help">
+            <b>domain</b> — matches the host and all subdomains (e.g. <code>github.com</code>) ·
+            <b>contains</b> — substring of the full URL ·
+            <b>exact</b> — exact URL match ·
+            <b>glob</b> — wildcards: <code>*</code> any chars, <code>?</code> one char ·
+            <b>regex</b> — JavaScript regular expression
+          </div>
+          <ul class="rule-list" id="whitelist"></ul>
+        </div>
+
+        <div class="card">
+          <div class="rules-hd">
+            <h2>Blacklist (force-suspend)</h2>
+            <button class="btn ghost-btn" id="add-blacklist">+ Add entry</button>
+          </div>
+          <div class="rule-help">Use sparingly — these matches ignore the "never suspend" guards (except internal/active).</div>
+          <ul class="rule-list" id="blacklist"></ul>
+        </div>
+      </section>
+
+      <!-- PER-DOMAIN -->
+      <section class="panel" id="perdomain-panel">
+        <header class="panel-hd">
+          <h1>Per-domain rules</h1>
+          <p>Override the base timer or behaviour for specific URL patterns <em>or named tab groups</em>. Rules are evaluated top-down; the first match wins.</p>
+        </header>
+
+        <div class="card">
+          <div class="rules-hd">
+            <h2>Rules</h2>
+            <button class="btn ghost-btn" id="add-perdomain">+ Add rule</button>
+          </div>
+          <ul class="rule-list rule-list-pd" id="perdomain"></ul>
+        </div>
+      </section>
+
+      <!-- SCHEDULE -->
+      <section class="panel" id="schedule-panel">
+        <header class="panel-hd">
+          <h1>Schedule</h1>
+          <p>Use different idle timers depending on the time of day.</p>
+        </header>
+
+        <div class="card">
+          <div class="row">
+            <div class="row-meta">
+              <div class="row-title">Enable schedule</div>
+              <div class="row-sub">When off, the General timer applies all day.</div>
+            </div>
+            <label class="switch"><input type="checkbox" id="sch-enabled" /><span></span></label>
+          </div>
+
+          <hr />
+
+          <div class="row">
+            <div class="row-meta">
+              <div class="row-title">Active days</div>
+              <div class="row-sub">Days where the work-hours timer applies.</div>
+            </div>
+            <div class="dow" id="sch-days">
+              <label><input type="checkbox" value="1" /><span>Mon</span></label>
+              <label><input type="checkbox" value="2" /><span>Tue</span></label>
+              <label><input type="checkbox" value="3" /><span>Wed</span></label>
+              <label><input type="checkbox" value="4" /><span>Thu</span></label>
+              <label><input type="checkbox" value="5" /><span>Fri</span></label>
+              <label><input type="checkbox" value="6" /><span>Sat</span></label>
+              <label><input type="checkbox" value="0" /><span>Sun</span></label>
+            </div>
+          </div>
+
+          <hr />
+
+          <div class="row">
+            <div class="row-meta">
+              <div class="row-title">Work hours</div>
+              <div class="row-sub">Aggressive timer applied during these hours.</div>
+            </div>
+            <div class="time-range">
+              <input type="time" id="sch-start" /> <span>→</span>
+              <input type="time" id="sch-end" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="row-meta">
+              <div class="row-title">Work-hours timer</div>
+              <div class="row-sub">Idle minutes before suspension during work hours.</div>
+            </div>
+            <div class="num-with-unit">
+              <input type="number" id="sch-work-min" min="1" max="1440" />
+              <span class="unit">minutes</span>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="row-meta">
+              <div class="row-title">Off-hours timer</div>
+              <div class="row-sub">Idle minutes outside work hours.</div>
+            </div>
+            <div class="num-with-unit">
+              <input type="number" id="sch-off-min" min="1" max="1440" />
+              <span class="unit">minutes</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- POWER -->
+      <section class="panel" id="power-panel">
+        <header class="panel-hd">
+          <h1>Power &amp; memory</h1>
+          <p>React to battery state and system memory pressure.</p>
+        </header>
+
+        <div class="card">
+          <div class="row">
+            <div class="row-meta">
+              <div class="row-title">Aggressive on battery</div>
+              <div class="row-sub">Use a shorter timer when running on battery.</div>
+            </div>
+            <label class="switch"><input type="checkbox" id="pow-aggro" /><span></span></label>
+          </div>
+
+          <div class="row">
+            <div class="row-meta">
+              <div class="row-title">Battery timer</div>
+              <div class="row-sub">Idle minutes before suspension while on battery.</div>
+            </div>
+            <div class="num-with-unit">
+              <input type="number" id="pow-bat-min" min="1" max="1440" />
+              <span class="unit">minutes</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="row">
+            <div class="row-meta">
+              <div class="row-title">Memory pressure trigger</div>
+              <div class="row-sub">When system free RAM drops below this, accelerate suspension.</div>
+            </div>
+            <label class="switch"><input type="checkbox" id="mem-enabled" /><span></span></label>
+          </div>
+
+          <div class="row">
+            <div class="row-meta">
+              <div class="row-title">Threshold</div>
+              <div class="row-sub">Free memory below this triggers aggressive mode.</div>
+            </div>
+            <div class="num-with-unit">
+              <input type="number" id="mem-threshold" min="256" max="65536" step="128" />
+              <span class="unit">MB free</span>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="row-meta">
+              <div class="row-title">Aggressive timer</div>
+              <div class="row-sub">Used while under memory pressure.</div>
+            </div>
+            <div class="num-with-unit">
+              <input type="number" id="mem-min" min="1" max="1440" />
+              <span class="unit">minutes</span>
+            </div>
+          </div>
+
+          <div class="info">
+            <div><b>Now:</b> <span id="mem-current">—</span> free · <span id="mem-battery">—</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SMART -->
+      <section class="panel" id="smart-panel">
+        <header class="panel-hd">
+          <h1>Smart suspension</h1>
+          <p>Adapt the idle timer based on how often you actually return to a tab.</p>
+        </header>
+
+        <div class="card">
+          <div class="row">
+            <div class="row-meta">
+              <div class="row-title">Learn from usage</div>
+              <div class="row-sub">Frequently revisited tabs get more grace; one-offs go faster.</div>
+            </div>
+            <label class="switch"><input type="checkbox" id="smart-enabled" /><span></span></label>
+          </div>
+
+          <div class="row">
+            <div class="row-meta">
+              <div class="row-title">"Frequent" multiplier</div>
+              <div class="row-sub">Multiply base timer for tabs visited often.</div>
+            </div>
+            <div class="num-with-unit"><input type="number" id="smart-freq" step="0.1" min="1" max="10" /><span class="unit">×</span></div>
+          </div>
+
+          <div class="row">
+            <div class="row-meta">
+              <div class="row-title">"Rare" multiplier</div>
+              <div class="row-sub">Multiply base timer for tabs visited only once.</div>
+            </div>
+            <div class="num-with-unit"><input type="number" id="smart-rare" step="0.1" min="0.1" max="2" /><span class="unit">×</span></div>
+          </div>
+
+          <div class="row">
+            <div class="row-meta">
+              <div class="row-title">Visits to count as "frequent"</div>
+              <div class="row-sub">Minimum visit count before frequent multiplier kicks in.</div>
+            </div>
+            <div class="num-with-unit"><input type="number" id="smart-visits" min="2" max="100" /><span class="unit">visits</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- APPEARANCE -->
+      <section class="panel" id="appearance-panel">
+        <header class="panel-hd">
+          <h1>Suspended page</h1>
+          <p>Customize how a suspended tab looks when you return to it.</p>
+        </header>
+
+        <div class="card">
+          <div class="row">
+            <div class="row-meta">
+              <div class="row-title">Theme</div>
+              <div class="row-sub">Affects the suspended placeholder page.</div>
+            </div>
+            <select id="ap-theme">
+              <option value="dark">Dark</option>
+              <option value="light">Light</option>
+              <option value="auto">Auto (system)</option>
+            </select>
+          </div>
+
+          <div class="row">
+            <div class="row-meta">
+              <div class="row-title">Accent color</div>
+              <div class="row-sub">Used for the restore button and highlights.</div>
+            </div>
+            <input type="color" id="ap-accent" />
+          </div>
+
+          <div class="row">
+            <div class="row-meta">
+              <div class="row-title">Show "last active" timestamp</div>
+            </div>
+            <label class="switch"><input type="checkbox" id="ap-lastvisit" /><span></span></label>
+          </div>
+
+          <div class="row">
+            <div class="row-meta">
+              <div class="row-title">Show "press anything to restore" hint</div>
+            </div>
+            <label class="switch"><input type="checkbox" id="ap-hint" /><span></span></label>
+          </div>
+
+          <div class="row">
+            <div class="row-meta">
+              <div class="row-title">Auto-restore on focus</div>
+              <div class="row-sub">Restore immediately when you switch to the tab (no click needed).</div>
+            </div>
+            <label class="switch"><input type="checkbox" id="ap-autorestore" /><span></span></label>
+          </div>
+
+          <div class="row col">
+            <div class="row-meta">
+              <div class="row-title">Custom message</div>
+              <div class="row-sub">Optional note shown on every suspended tab.</div>
+            </div>
+            <textarea id="ap-message" rows="2" placeholder="e.g. — These tabs are sleeping. They'll wake up the moment you need them."></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- SESSIONS -->
+      <section class="panel" id="sessions-panel">
+        <header class="panel-hd">
+          <h1>Sessions</h1>
+          <p>Save the current set of open tabs as a named session you can revisit later.</p>
+        </header>
+
+        <div class="card">
+          <div class="rules-hd">
+            <h2>Save current window</h2>
+            <button class="btn primary-btn" id="save-session">Snapshot now</button>
+          </div>
+          <ul class="session-list" id="session-list"></ul>
+        </div>
+      </section>
+
+      <!-- STATS -->
+      <section class="panel" id="stats-panel">
+        <header class="panel-hd">
+          <h1>Statistics</h1>
+          <p>What TabZen has done since installation.</p>
+        </header>
+
+        <div class="card stats-grid">
+          <div class="bigstat">
+            <div class="bigstat-num" id="bs-suspensions">0</div>
+            <div class="bigstat-lbl">Tabs suspended</div>
+          </div>
+          <div class="bigstat">
+            <div class="bigstat-num" id="bs-saved">0 MB</div>
+            <div class="bigstat-lbl">RAM reclaimed (estimate)</div>
+          </div>
+          <div class="bigstat">
+            <div class="bigstat-num" id="bs-restored">0</div>
+            <div class="bigstat-lbl">Tabs restored</div>
+          </div>
+          <div class="bigstat">
+            <div class="bigstat-num" id="bs-since">—</div>
+            <div class="bigstat-lbl">Tracking since</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="rules-hd">
+            <h2>Top domains</h2>
+            <button class="btn ghost-btn" id="reset-stats">Reset stats</button>
+          </div>
+          <ul class="domain-list" id="top-domains"></ul>
+        </div>
+      </section>
+
+      <!-- SHORTCUTS -->
+      <section class="panel" id="shortcuts-panel">
+        <header class="panel-hd">
+          <h1>Keyboard shortcuts</h1>
+          <p>Configure these in <code>chrome://extensions/shortcuts</code>.</p>
+        </header>
+        <div class="card">
+          <ul class="shortcut-list">
+            <li><span>Suspend current tab</span> <span class="kbd">Alt+S</span></li>
+            <li><span>Restore current tab</span> <span class="kbd">Alt+R</span></li>
+            <li><span>Suspend all tabs in window</span> <span class="kbd">Alt+Shift+S</span></li>
+            <li><span>Restore all suspended tabs</span> <span class="kbd">Alt+Shift+R</span></li>
+            <li><span>Whitelist current domain</span> <span class="kbd dim">unset</span></li>
+            <li><span>Open settings</span> <span class="kbd dim">unset</span></li>
+          </ul>
+          <button class="btn ghost-btn" id="open-shortcuts">Edit shortcuts in Chrome →</button>
+        </div>
+      </section>
+
+      <!-- DATA -->
+      <section class="panel" id="data-panel">
+        <header class="panel-hd">
+          <h1>Backup &amp; data</h1>
+          <p>Export your settings to a JSON file, or import a saved configuration.</p>
+        </header>
+
+        <div class="card">
+          <div class="row">
+            <div class="row-meta">
+              <div class="row-title">Export configuration</div>
+              <div class="row-sub">Includes all rules, schedule, and appearance — but no stats.</div>
+            </div>
+            <button class="btn primary-btn" id="export-btn">Export JSON</button>
+          </div>
+
+          <div class="row">
+            <div class="row-meta">
+              <div class="row-title">Import configuration</div>
+              <div class="row-sub">Replaces all current settings.</div>
+            </div>
+            <label class="btn ghost-btn">
+              Import JSON
+              <input type="file" id="import-file" accept="application/json" hidden />
+            </label>
+          </div>
+
+          <hr />
+
+          <div class="row">
+            <div class="row-meta">
+              <div class="row-title danger">Reset to defaults</div>
+              <div class="row-sub">Wipes settings and stats. Cannot be undone.</div>
+            </div>
+            <button class="btn danger-btn" id="reset-all">Reset everything</button>
+          </div>
+        </div>
+
+        <div class="card about">
+          <h2>About</h2>
+          <p>TabZen runs entirely on your machine. No telemetry, no analytics, no remote config.
+            Storage uses <code>chrome.storage.local</code>; tab activity tracking lives only in
+            this browser session.</p>
+          <p class="muted">Version 1.0.0</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <!-- Rule entry template -->
+  <template id="tpl-rule">
+    <li class="rule-item">
+      <label class="switch tiny"><input type="checkbox" class="r-enabled" checked/><span></span></label>
+      <select class="r-target" title="Match against URL pattern or tab group title">
+        <option value="url">URL</option>
+        <option value="group">Group</option>
+      </select>
+      <select class="r-mode"></select>
+      <input type="text" class="r-value" placeholder="value" list="group-titles" />
+      <button class="r-del" title="Remove">✕</button>
+    </li>
+  </template>
+
+  <!-- Per-domain rule template -->
+  <template id="tpl-pd">
+    <li class="rule-item rule-pd">
+      <label class="switch tiny"><input type="checkbox" class="r-enabled" checked/><span></span></label>
+      <select class="r-target" title="Match against URL pattern or tab group title">
+        <option value="url">URL</option>
+        <option value="group">Group</option>
+      </select>
+      <select class="r-mode"></select>
+      <input type="text" class="r-value" placeholder="pattern" list="group-titles" />
+      <span class="r-arrow">→</span>
+      <select class="r-action">
+        <option value="custom">timer</option>
+        <option value="never">never suspend</option>
+      </select>
+      <input type="number" class="r-min" min="1" max="1440" placeholder="min" />
+      <button class="r-del" title="Remove">✕</button>
+    </li>
+  </template>
+
+  <!-- Autocomplete source for tab-group rules; populated at runtime -->
+  <datalist id="group-titles"></datalist>
+
+  <script src="options.js"></script>
+</body>
+</html>

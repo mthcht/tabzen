@@ -1,0 +1,25 @@
+<svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Outer amber tab silhouette -->
+  <g fill="#e8956b">
+    <rect x="6" y="22" width="116" height="100" rx="16" ry="16"/>
+    <path d="M 24,22 L 24,16 Q 24,10 30,10 L 50,10 Q 56,10 56,16 L 56,22 Z"/>
+  </g>
+  <!-- Dark inner area, inset to leave an amber frame -->
+  <g fill="#1b1814">
+    <rect x="14" y="30" width="100" height="84" rx="10" ry="10"/>
+    <path d="M 30,30 L 30,18 Q 30,14 34,14 L 46,14 Q 50,14 50,18 L 50,30 Z"/>
+  </g>
+  
+        <g fill="#e8956b">
+            <!-- Top bar -->
+            <rect x="42" y="38" width="44" height="9" rx="1.5"/>
+            <rect x="40" y="34" width="6" height="14" rx="1.2" fill="#e8956b"/><rect x="82" y="34" width="6" height="14" rx="1.2" fill="#e8956b"/>
+            <!-- Diagonal -->
+            <polygon points="80,47 86.5,47 48,69 41.5,69"/>
+            <!-- Bottom bar -->
+            <rect x="42" y="69" width="44" height="9" rx="1.5"/>
+            <rect x="40" y="68" width="6" height="14" rx="1.2" fill="#e8956b"/><rect x="82" y="68" width="6" height="14" rx="1.2" fill="#e8956b"/>
+        </g>
+    
+  <g><path fill="#e8956b" d="M 50,109 C 56,113 72,113 78,109 L 78,111 C 72,115 56,115 50,111 Z"/><path d="M 0,-18 C 4.5,-13 4.5,-3 0,2 C -4.5,-3 -4.5,-13 0,-18 Z" fill="#e8956b" transform="translate(64 108) rotate(-58)"/><path d="M 0,-18 C 4.5,-13 4.5,-3 0,2 C -4.5,-3 -4.5,-13 0,-18 Z" fill="#e8956b" transform="translate(64 108) rotate(-29)"/><path d="M 0,-18 C 4.5,-13 4.5,-3 0,2 C -4.5,-3 -4.5,-13 0,-18 Z" fill="#e8956b" transform="translate(64 108) rotate(0)"/><path d="M 0,-18 C 4.5,-13 4.5,-3 0,2 C -4.5,-3 -4.5,-13 0,-18 Z" fill="#e8956b" transform="translate(64 108) rotate(29)"/><path d="M 0,-18 C 4.5,-13 4.5,-3 0,2 C -4.5,-3 -4.5,-13 0,-18 Z" fill="#e8956b" transform="translate(64 108) rotate(58)"/></g>
+</svg>

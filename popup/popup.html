@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TabZen</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <header class="hd">
+    <div class="brand">
+      <span class="dot"></span>
+      <span class="brand-name">TabZen</span>
+    </div>
+    <div class="hd-actions">
+      <a id="open-github" class="gh-btn" href="https://github.com/mthcht/tabzen" target="_blank" rel="noopener noreferrer" title="View source on GitHub" aria-label="View source on GitHub">
+        <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="currentColor">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+        </svg>
+      </a>
+      <button id="toggle-enabled" class="pill" title="Pause or resume suspension">
+        <span id="enabled-dot" class="state-dot"></span>
+        <span id="enabled-label">On</span>
+      </button>
+    </div>
+  </header>
+
+  <section class="now">
+    <div class="now-row">
+      <div class="now-fav-wrap">
+        <img id="cur-fav" alt="" />
+      </div>
+      <div class="now-meta">
+        <div id="cur-title" class="now-title">…</div>
+        <div class="now-sub">
+          <span id="cur-host" class="now-host">…</span>
+          <span id="cur-status" class="now-chip" hidden></span>
+        </div>
+      </div>
+      <button id="act-whitelist" class="icon-btn" title="Never suspend this domain" aria-label="Never suspend this domain">
+        <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 1.5l1.8 4.2 4.7.4-3.6 3 1.1 4.5L8 11.4l-4 2.2 1.1-4.5-3.6-3 4.7-.4z"/>
+        </svg>
+      </button>
+    </div>
+
+    <div id="bulk-actions" class="bulk-actions">
+      <button id="suspend-others-in-window" class="primary-mini" hidden>
+        <span class="primary-lbl">
+          <span class="primary-text">Other tabs</span>
+          <span class="primary-hint">this window</span>
+        </span>
+        <span class="primary-count"><span id="in-window-count">0</span></span>
+      </button>
+
+      <button id="suspend-others" class="primary-mini" hidden>
+        <span class="primary-lbl">
+          <span class="primary-text">Other windows</span>
+          <span class="primary-hint"><span id="other-count">0</span> window<span id="other-plural">s</span></span>
+        </span>
+        <span class="primary-count"><span id="other-window-count">0</span></span>
+      </button>
+    </div>
+
+    <button id="primary-action" class="primary">
+      <span class="primary-lbl">
+        <span id="primary-text">Suspend this tab</span>
+        <span id="primary-hint" class="primary-hint">Frees about 80 MB</span>
+      </span>
+      <span id="primary-shortcut" class="primary-sk">Alt+S</span>
+    </button>
+
+    <div id="snooze-row" class="snooze-row" hidden>
+      <span class="snooze-lbl">Snooze:</span>
+      <button class="snooze-chip" data-mins="60">1 hr</button>
+      <button class="snooze-chip" data-mins="240">4 hr</button>
+      <button class="snooze-chip" data-preset="tomorrow">tomorrow</button>
+      <button class="snooze-chip" data-preset="monday">Mon</button>
+    </div>
+  </section>
+
+  <section class="idle">
+    <div class="idle-hd">
+      <span class="idle-eyebrow">Idle in this window</span>
+      <span id="idle-count" class="idle-count">0</span>
+    </div>
+
+    <ul id="idle-list" class="idle-list" aria-label="Idle tabs in this window"></ul>
+
+    <div id="idle-empty" class="idle-empty" hidden>
+      <div class="idle-empty-mark">✓</div>
+      <div class="idle-empty-text">All caught up — no idle tabs.</div>
+    </div>
+
+    <button id="bulk-suspend" class="bulk" hidden>
+      <span class="bulk-main">Suspend all <span id="bulk-count">0</span></span>
+      <span id="bulk-est" class="bulk-est">~0 MB</span>
+    </button>
+  </section>
+
+  <section class="stats">
+    <div class="stat">
+      <div class="stat-num" id="s-suspensions">0</div>
+      <div class="stat-lbl">tabs suspended</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <div class="stat-num" id="s-saved">0 MB</div>
+      <div class="stat-lbl">total freed</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <div class="stat-num" id="s-free">—</div>
+      <div class="stat-lbl">free now</div>
+    </div>
+  </section>
+
+  <footer class="ft">
+    <button id="act-restore-all" class="link">↻ Restore all</button>
+    <span class="ft-sep">·</span>
+    <button id="open-options" class="link">⚙ Settings</button>
+  </footer>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <template id="tpl-idle">
+    <li class="idle-row">
+      <img class="ir-fav" alt="" />
+      <div class="ir-meta">
+        <div class="ir-title"></div>
+        <div class="ir-host"></div>
+      </div>
+      <span class="ir-age" title=""></span>
+      <button class="ir-suspend" title="Suspend this tab" aria-label="Suspend this tab">
+        <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+          <circle cx="8" cy="8" r="6.2"/>
+          <path d="M3.5 12.5L12.5 3.5"/>
+        </svg>
+      </button>
+    </li>
+  </template>
+
+  <script src="popup.js"></script>
+</body>
+</html>

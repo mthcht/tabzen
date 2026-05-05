@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Suspended</title>
+  <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'></svg>" />
+  <link rel="stylesheet" href="suspended.css" />
+</head>
+<body>
+  <main class="card" id="card" role="main" aria-label="Suspended tab">
+    <div class="row top">
+      <div class="favicon-wrap">
+        <img id="favicon" alt="" width="40" height="40" />
+      </div>
+      <div class="meta">
+        <div class="eyebrow">SUSPENDED · TABZEN</div>
+        <h1 id="title">Untitled tab</h1>
+        <a id="url" class="url" href="#" rel="noopener"></a>
+        <div class="snooze-badge" id="snooze-badge" hidden>
+          <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="8" cy="8" r="6.2"/>
+            <path d="M8 4.5V8l2 1.6"/>
+          </svg>
+          <span id="snooze-text">Wakes soon</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="separator"></div>
+
+    <div class="footer">
+      <div class="lastvisit" id="lastvisit"></div>
+      <button id="restore" class="restore" type="button">
+        <span class="kbd">↵</span>
+        <span>Restore tab</span>
+      </button>
+    </div>
+
+    <p class="hint" id="hint">Press any key or click anywhere to restore.</p>
+    <p class="custom" id="custom" hidden></p>
+  </main>
+
+  <div class="brand" aria-hidden="true">
+    <svg viewBox="0 0 24 24" width="14" height="14"><circle cx="12" cy="12" r="5" fill="currentColor"/></svg>
+    <span>TabZen</span>
+  </div>
+
+  <script src="suspended.js"></script>
+</body>
+</html>
