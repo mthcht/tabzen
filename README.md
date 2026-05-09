@@ -19,7 +19,8 @@ Reclaim RAM by intelligently suspending inactive tabs. Per-domain rules, regex w
 ---
 
 ## Install From the WebStore
-*publishing in progress*
+
+https://chromewebstore.google.com/detail/tabzen-%E2%80%94-advanced-tab-sus/gdnekjhfpkbnhipehcngckafgnnmdoll
 
 ## Install (developer mode)
 
